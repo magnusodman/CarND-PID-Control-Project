@@ -36,10 +36,22 @@ int main(int argc, char *argv[])
 
   PID pid;
   // TODO: Initialize the pid variable.
-  double init_Kp = atof(argv[1]);
-  double init_Ki = atof(argv[2]);
-  double init_Kd = atof(argv[3]);
-  //pid.Init(0.5, 0.1, 0.05);
+
+  double init_Kp = 0.1; //0.1
+  double init_Ki = 0.001; //0.002
+  double init_Kd = 1.0; //2.4
+
+  for(int index =0; index < argc; index++) {
+    cout << "arg " << index << " = " << argv[index] << endl;
+  }
+  if (argc == 4) {
+    init_Kp = atof(argv[1]);
+    init_Ki = atof(argv[2]);
+    init_Kd = atof(argv[3]);
+
+  }
+
+  cout << "Initializing pid (Kp=" << init_Kp << ",  Ki=" << init_Ki << " Kd=" << init_Kd << endl;
   pid.Init(init_Kp, init_Ki, init_Kd);
 
   h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
@@ -68,11 +80,16 @@ int main(int argc, char *argv[])
           pid.UpdateError(cte);
           steer_value = pid.steeringAngle(cte);
 
-          double throttle = 0.1;
-          if(speed > 10.0) {
-            throttle = 0.00;
+          double throttle = 0.3;
+
+
+          if(speed > 13.0) {
+            throttle = 0.1;
           }
           if(speed > 15.0) {
+            throttle = 0.0;
+          }
+          if(speed > 17.0) {
             throttle = -0.10;
           }
 

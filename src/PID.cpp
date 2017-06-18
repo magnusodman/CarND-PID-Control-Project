@@ -32,7 +32,7 @@ double PID::TotalError() {
 double PID::steeringAngle(double cte) {
 
   double diff_cte = 0;
-  //long long int diff_time = 0;
+  long long int diff_time = 0;
   if(previousTimestamp == 0) {
 
       previousTimestamp = duration_cast< milliseconds >(
@@ -46,11 +46,12 @@ double PID::steeringAngle(double cte) {
       system_clock::now().time_since_epoch()
     ).count();
 
-    //diff_time = now - previousTimestamp;
+    diff_time = now - previousTimestamp;
     diff_cte = cte - previousCTE; //1000 * (cte - previousCTE) / diff_time;
     this->sumCTE = this-> sumCTE + cte; // * diff_time / 1000;
 
-    //previousTimestamp = now;
+    previousTimestamp = now;
+    cout << "Time diff: " << diff_time << endl;
 
   }
 
@@ -60,7 +61,6 @@ double PID::steeringAngle(double cte) {
   std::cout << "P_PART: " << p_part << endl;
   std::cout << "D_PART: " << d_part << endl;
   std::cout << "I_PART: " << i_part << endl;
-  //std::cout << "\tt_diff: " << diff_time << endl;
   std::cout << "\tSum CTE: " << sumCTE << endl;
   auto steering = p_part + d_part + i_part;
   if(steering < -1.0) {
