@@ -1,0 +1,32 @@
+Reflections
+===========
+
+The proportional part of the controller (K_p) make the car follow the road according to CTE (Cross Track Error). A large K_p makes the PID responsive but makes it more likely to overshooting and oscillations. 
+
+The differential part (K_d) dampens the proportional to CTE change rate. This will supress the oscillations and overshoot from a large K_d.
+
+The integrating part of the PID helps out when there are systematic errors in the system (When the wheels are not perfectly aligned or systematic errors in the sensors).
+
+My hyperparameters made the car go straight and stable for the most part. It could start to oscillate a little in the curves and some places along the track where I suspect that some nonlinear CTE measurements where encountered.
+
+Hyperparameters
+---------------
+
+I found an algorithm online that I tried succesfully. 
+
+1. Set all gains to 0.
+2. Increase K_d until the car start to oscillate.
+3. Reduce K_d with a factor 2.
+4. Set K_p to to 1 % of K_d.
+5. Increase until the car start to oscillate.
+6. Reduce K_p by a factor 2.
+7. Set K_i to 1 % of K_p.
+8. Increase K_i until oscillations start.
+9. Decrease K_i by a factor 2.
+
+Using this algorithm and some additional manual tuning I ended up with my final parameters:
+
+K_p = 0.1
+K_d = 1.0
+K_i = 0.001
+
